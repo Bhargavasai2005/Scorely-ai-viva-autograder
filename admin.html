@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel | Viva Adaptive</title>
+    <script>
+      if (localStorage.getItem("adminLoggedIn") !== "true") {
+        window.location.replace("/viva/admin-login-page");
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/admin-app.css" />
+    <link rel="stylesheet" href="/static/css/footer-contact.css" />
+    <link rel="stylesheet" href="/static/css/viva_flask_bridge.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body class="viva-admin-app">
+    <div class="admin-app-strip" aria-hidden="true"></div>
+    <header class="admin-shell-header">
+      <div class="admin-shell-header-inner">
+        <div class="admin-shell-brand">
+          <a class="admin-shell-home" href="/viva">← Home</a>
+          <div class="admin-shell-title-block">
+            <span class="admin-shell-gear" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="24" cy="24" r="10" stroke="currentColor" stroke-width="2.5" />
+                <path
+                  d="M24 4v4M24 40v4M44 24h-4M8 24H4M38.6 9.4l-2.8 2.8M12.2 35.8l-2.8 2.8M38.6 38.6l-2.8-2.8M12.2 12.2l-2.8-2.8"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </span>
+            <span class="admin-shell-title">Admin Panel</span>
+          </div>
+        </div>
+        <nav class="admin-shell-nav" aria-label="Admin sections">
+          <button
+            type="button"
+            class="admin-shell-nav-link is-active"
+            data-admin-section="create-session"
+            aria-current="page"
+            onclick="showSection('create-session')"
+          >
+            Create Session
+          </button>
+          <button
+            type="button"
+            class="admin-shell-nav-link"
+            data-admin-section="sessions"
+            onclick="showSection('sessions')"
+          >
+            Sessions
+          </button>
+          <button
+            type="button"
+            class="admin-shell-nav-link"
+            data-admin-section="results"
+            onclick="showSection('results')"
+          >
+            Results
+          </button>
+          <button
+            type="button"
+            class="admin-shell-nav-link admin-shell-nav-link--danger"
+            onclick="adminLogout()"
+          >
+            Logout
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="admin-shell-main">
+      <section id="create-session" class="section active">
+        <div class="admin-form-card">
+          <h1>Create New Viva Session</h1>
+          <form id="sessionForm" class="admin-session-form" enctype="multipart/form-data">
+            <div class="admin-form-field">
+              <label for="session_name">Session Name <span class="req" aria-hidden="true">*</span></label>
+              <input
+                type="text"
+                id="session_name"
+                name="session_name"
+                required
+                placeholder="e.g., Midterms Python Viva"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="admin-form-grid">
+              <div class="admin-form-field">
+                <label for="programme">Programme <span class="req" aria-hidden="true">*</span></label>
+                <select id="programme" name="programme" required>
+                  <option value="">Select Programme</option>
+                  <optgroup label="Available Programmes">
+                    <option value="BTech">BTech</option>
+                    <option value="BBA">BBA</option>
+                    <option value="BA">BA</option>
+                    <option value="PhD">PhD</option>
+                  </optgroup>
+                </select>
+              </div>
+              <div class="admin-form-field">
+                <label for="time_limit">Time Limit (minutes) <span class="req" aria-hidden="true">*</span></label>
+                <input type="number" id="time_limit" name="time_limit" min="1" max="180" value="10" required />
+                <p class="hint">Total time allowed for the entire viva</p>
+              </div>
+            </div>
+
+            <div class="admin-form-grid">
+              <div class="admin-form-field">
+                <label for="batch">Batch <span class="req" aria-hidden="true">*</span></label>
+                <select id="batch" name="batch" required>
+                  <option value="">Select Batch</option>
+                  <option value="2024-2028">2024-2028</option>
+                  <option value="2025-2029">2025-2029</option>
+                  <option value="2026-2030">2026-2030</option>
+                </select>
+              </div>
+              <div class="admin-form-field">
+                <label for="branch">Branch <span class="req" aria-hidden="true">*</span></label>
+                <select id="branch" name="branch" required>
+                  <option value="">Select Branch</option>
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Information Technology">Information Technology</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Mechanical">Mechanical</option>
+                  <option value="Civil">Civil</option>
+                  <option value="Electrical">Electrical</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="admin-form-grid">
+              <div class="admin-form-field">
+                <label for="semester">Semester <span class="req" aria-hidden="true">*</span></label>
+                <select id="semester" name="semester" required>
+                  <option value="">Select Semester</option>
+                  <option value="Semester I">Semester I</option>
+                  <option value="Semester II">Semester II</option>
+                  <option value="Semester III">Semester III</option>
+                  <option value="Semester IV">Semester IV</option>
+                  <option value="Semester V">Semester V</option>
+                  <option value="Semester VI">Semester VI</option>
+                  <option value="Semester VII">Semester VII</option>
+                  <option value="Semester VIII">Semester VIII</option>
+                </select>
+              </div>
+              <div class="admin-form-field">
+                <label for="subject">Subject <span class="req" aria-hidden="true">*</span></label>
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  required
+                  placeholder="e.g., Python Programming"
+                  autocomplete="off"
+                />
+              </div>
+            </div>
+
+            <div class="admin-form-grid">
+              <div class="admin-form-field">
+                <label for="num_questions">Number of Questions <span class="req" aria-hidden="true">*</span></label>
+                <input type="number" id="num_questions" name="num_questions" min="1" max="50" value="5" required />
+              </div>
+              <div class="admin-form-field">
+                <label for="marks_per_q">Marks per Question <span class="req" aria-hidden="true">*</span></label>
+                <input type="number" id="marks_per_q" name="marks_per_q" value="10" min="1" max="100" required />
+              </div>
+            </div>
+
+            <div class="admin-form-field admin-form-field--file">
+              <label for="book">Upload Study Material (PDF/TXT/DOCX) <span class="req" aria-hidden="true">*</span></label>
+              <div class="admin-file-shell">
+                <input
+                  type="file"
+                  id="book"
+                  class="admin-file-input"
+                  name="book"
+                  accept=".pdf,.txt,.docx"
+                  required
+                />
+              </div>
+              <p class="hint admin-file-hint">PDF, TXT, or Word (.docx).</p>
+            </div>
+
+            <div id="sessionMessage" class="message" role="status"></div>
+
+            <div class="admin-form-actions">
+              <button type="submit" class="admin-btn-primary">
+                <span class="btn-text">Generate &amp; Create Session</span>
+                <span class="btn-loading" style="display: none">Generating Questions…</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="sessions" class="section">
+        <div class="admin-sessions-card">
+          <h2>All Sessions</h2>
+          <div id="sessionsList" class="admin-session-list"></div>
+        </div>
+      </section>
+
+      <section id="results" class="section">
+        <div class="admin-results-card">
+          <h2>Student Results</h2>
+          <div id="resultsList" class="admin-result-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="sessionModal" class="admin-modal" hidden>
+      <div class="admin-modal-backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+      <div
+        class="admin-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="session-modal-title"
+      >
+        <header class="admin-modal-header">
+          <h2 id="session-modal-title">Session Details</h2>
+          <button type="button" class="admin-modal-close" data-modal-close aria-label="Close dialog">
+            ×
+          </button>
+        </header>
+        <div class="admin-modal-body" id="sessionDetails"></div>
+      </div>
+    </div>
+
+    <div id="resultModal" class="admin-modal" hidden>
+      <div class="admin-modal-backdrop" data-modal-close tabindex="-1" aria-hidden="true"></div>
+      <div
+        class="admin-modal-dialog admin-modal-dialog--report"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="result-modal-title"
+      >
+        <header class="admin-modal-header">
+          <h2 id="result-modal-title">Student Report</h2>
+          <button type="button" class="admin-modal-close" data-modal-close aria-label="Close dialog">
+            ×
+          </button>
+        </header>
+        <div class="admin-modal-body admin-modal-body--report" id="resultDetails"></div>
+      </div>
+    </div>
+
+    <footer class="site-footer site-footer--full site-footer--admin-app">
+      <div class="footer-wrap footer-wrap--with-contact">
+        <div class="footer-contact" aria-label="Contact Nexcen Global">
+          <a class="footer-contact-card" href="mailto:info@nexcenglobal.com">
+            <span class="footer-lead" aria-hidden="true">
+              <svg class="footer-flag-svg" viewBox="0 0 60 40" focusable="false">
+                <defs>
+                  <linearGradient id="footerGlobeGradAdmin" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#1f7bcf" />
+                    <stop offset="100%" stop-color="#11a592" />
+                  </linearGradient>
+                </defs>
+                <rect width="60" height="40" rx="4" fill="url(#footerGlobeGradAdmin)" />
+                <circle cx="30" cy="20" r="11" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" />
+                <ellipse cx="30" cy="20" rx="4" ry="11" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1" />
+                <path d="M12 20h36M30 9c-4 6-4 14 0 22" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1" />
+              </svg>
+            </span>
+            <span class="footer-contact-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <path d="m22 6-10 7L2 6" />
+              </svg>
+            </span>
+            <span class="footer-contact-body">
+              <span class="footer-contact-label">Email</span>
+              <span class="footer-contact-value">info@nexcenglobal.com</span>
+            </span>
+          </a>
+          <a class="footer-contact-card" href="tel:+919717522463" aria-label="India phone: +91-97175 22463">
+            <span class="footer-lead" aria-hidden="true">
+              <img class="footer-flag-img" width="60" height="40" alt="" decoding="async" src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2060%2040%27%3E%3Crect%20width%3D%2760%27%20height%3D%2713.33%27%20fill%3D%27%23FF9933%27%2F%3E%3Crect%20y%3D%2713.33%27%20width%3D%2760%27%20height%3D%2713.34%27%20fill%3D%27%23FFFFFF%27%2F%3E%3Crect%20y%3D%2726.67%27%20width%3D%2760%27%20height%3D%2713.33%27%20fill%3D%27%23138808%27%2F%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2720%27%20r%3D%274.2%27%20fill%3D%27none%27%20stroke%3D%27%23000080%27%20stroke-width%3D%271.1%27%2F%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2720%27%20r%3D%271.1%27%20fill%3D%27%23000080%27%2F%3E%3C%2Fsvg%3E" />
+            </span>
+            <span class="footer-contact-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+            </span>
+            <span class="footer-contact-body footer-contact-body--phone">
+              <span class="footer-contact-value">+91-97175 22463</span>
+            </span>
+          </a>
+          <a class="footer-contact-card" href="tel:+16785974298" aria-label="United States phone: +1 (678) 597-4298">
+            <span class="footer-lead" aria-hidden="true">
+              <img class="footer-flag-img" width="60" height="40" alt="" decoding="async" src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2060%2040%27%3E%3Crect%20fill%3D%27%23B22234%27%20width%3D%2760%27%20height%3D%2740%27%2F%3E%3Cpath%20fill%3D%27%23FFFFFF%27%20d%3D%27M0%203h60v3H0zm0%206h60v3H0zm0%206h60v3H0zm0%206h60v3H0zm0%206h60v3H0zm0%206h60v3H0z%27%2F%3E%3Crect%20width%3D%2724%27%20height%3D%2721%27%20fill%3D%27%233C3B6E%27%2F%3E%3Ccircle%20cx%3D%274%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%278%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%276%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2710%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%274%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%278%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%276%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2710%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%274%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%278%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%276%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2710%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3C%2Fsvg%3E" />
+            </span>
+            <span class="footer-contact-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+            </span>
+            <span class="footer-contact-body footer-contact-body--phone">
+              <span class="footer-contact-value">+1 (678) 597-4298</span>
+            </span>
+          </a>
+        </div>
+        <div class="footer-main">
+          <p class="footer-copy">© 2026 Scorely AI. All rights reserved.</p>
+          <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/assessment">Assessment Tool</a>
+            <a href="/viva">Viva Adaptive</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      function adminLogout() {
+        localStorage.removeItem("adminLoggedIn");
+        window.location.replace("/viva/admin-login-page");
+      }
+    </script>
+    <script src="/static/js/admin.js"></script>
+  </body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assessment Tool | Scorely AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/css/stage-pages.css" />
+    <!-- ✅ ADDED: footer-contact.css for the contact cards styling -->
+    <link rel="stylesheet" href="/static/css/footer-contact.css" />
+    <link rel="icon" href="data:,">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  </head>
+  <body>
+    <div class="top-strip"></div>
+    <main class="wrap">
+      <header class="header">
+        <a href="/" style="text-decoration: none;"><p class="logo-mark">Scorely AI</p></a>
+        <h1>Examination AI</h1>
+        <p>Internal Assessment Workspace</p>
+      </header>
+ 
+      <section class="stepper" aria-label="Workflow steps">
+        <p id="stepperTitle" class="stepper-title">Step 1 of 3: Upload documents</p>
+        <div class="stepper-grid">
+          <article id="stepOne" class="step-box active">
+            <p class="step-index">1</p>
+            <p class="step-name">Page Load</p>
+            <p class="step-note">Start with empty upload form</p>
+          </article>
+          <article id="stepTwo" class="step-box">
+            <p class="step-index">2</p>
+            <p class="step-name">Documents Attached</p>
+            <p class="step-note">Ready to grade and processing</p>
+          </article>
+          <article id="stepThree" class="step-box">
+            <p class="step-index">3</p>
+            <p class="step-name">Completed</p>
+            <p class="step-note">Reports generated successfully</p>
+          </article>
+        </div>
+      </section>
+ 
+      <section class="layout">
+        <article class="card upload-panel">
+          <div class="section-head">
+            <h2>Batch Grading (Full Paper)</h2>
+            <span class="section-logo">Scorely AI</span>
+          </div>
+          <p class="panel-subtext">Upload all required documents to start AI grading instantly.</p>
+          <div class="format-chips">
+            <span>PDF</span><span>DOCX</span><span>Images</span><span>Any Student Count</span>
+          </div>
+          
+          <form id="batch-form">
+              <div class="field">
+                <label>Question paper <span id="statusQuestion" class="field-status pending">Pending</span></label>
+                <div id="questionRow" class="upload-row" data-drop-input="questionFileInput">
+                  <input id="questionFileInput" class="hidden-file-input" type="file" accept=".pdf,.doc,.docx" />
+                  <button class="choose-btn" type="button" data-target-input="questionFileInput">Choose File</button>
+                  <span id="questionFileName">No file chosen</span>
+                  <small class="drop-hint">Drop file here</small>
+                </div>
+              </div>
+              
+              <div class="field">
+                <label>Expert answers (3 docs) <span id="statusExperts" class="field-status pending">Pending</span></label>
+                <div class="expert-upload-grid">
+                  <article class="expert-box">
+                    <p>Expert 1</p>
+                    <div id="expertRow1" class="upload-row compact" data-drop-input="expertFileInput1">
+                      <input id="expertFileInput1" class="hidden-file-input" type="file" accept=".pdf,.doc,.docx" />
+                      <button class="choose-btn" type="button" data-target-input="expertFileInput1">Choose</button>
+                    </div>
+                    <p id="expertFileName1" class="selected-file-below">No file</p>
+                  </article>
+                  <article class="expert-box">
+                    <p>Expert 2</p>
+                    <div id="expertRow2" class="upload-row compact" data-drop-input="expertFileInput2">
+                      <input id="expertFileInput2" class="hidden-file-input" type="file" accept=".pdf,.doc,.docx" />
+                      <button class="choose-btn" type="button" data-target-input="expertFileInput2">Choose</button>
+                    </div>
+                    <p id="expertFileName2" class="selected-file-below">No file</p>
+                  </article>
+                  <article class="expert-box">
+                    <p>Expert 3</p>
+                    <div id="expertRow3" class="upload-row compact" data-drop-input="expertFileInput3">
+                      <input id="expertFileInput3" class="hidden-file-input" type="file" accept=".pdf,.doc,.docx" />
+                      <button class="choose-btn" type="button" data-target-input="expertFileInput3">Choose</button>
+                    </div>
+                    <p id="expertFileName3" class="selected-file-below">No file</p>
+                  </article>
+                </div>
+              </div>
+              
+              <div class="field">
+                <label>Student answer sheets <span id="statusStudents" class="field-status pending">Pending</span></label>
+                <div id="studentsRow" class="upload-row" data-drop-input="studentFilesInput">
+                  <input id="studentFilesInput" class="hidden-file-input" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" multiple />
+                  <button class="choose-btn" type="button" data-target-input="studentFilesInput">Choose Files</button>
+                  <span id="studentFilesName">No file chosen</span>
+                  <small class="drop-hint">Drop files here</small>
+                </div>
+                <div id="studentFilesList" class="selected-files-list"></div>
+              </div>
+              
+              <button id="gradeBtn" class="grade-cta disabled" type="submit" disabled>
+                Grade All Answer Sheets &#8594;
+              </button>
+              <p id="gradingStatus" class="status-row">Waiting for required files...</p>
+          </form>
+        </article>
+ 
+        <article class="card result-panel">
+          <div class="section-head">
+            <h2>Result</h2>
+            <span class="section-logo">Scorely AI</span>
+          </div>
+          <p id="resultBadge" class="result-badge idle">Awaiting uploads</p>
+          
+          <div id="resultSummaryCard" class="result-summary-card hidden">
+            <div>
+              <p class="summary-label">Students Processed</p>
+              <p id="summaryStudents" class="summary-value">0</p>
+            </div>
+            <div>
+              <p class="summary-label">Average Score</p>
+              <p id="summaryAverage" class="summary-value">0%</p>
+            </div>
+            <div>
+              <p class="summary-label">Total Questions</p>
+              <p id="summaryAccuracy" class="summary-value">0</p>
+            </div>
+          </div>
+          
+          <div id="resultContent" class="file-list">
+            <div class="result-skeleton"><span></span><span></span><span></span></div>
+            <p class="skeleton-note">No grading yet. Fill all required fields and then click <strong>Grade All Answer Sheets</strong>.</p>
+          </div>
+          
+          <div class="foot-actions">
+            <button class="mini-btn" type="button" id="download-pdf-btn" disabled>Download All Reports (ZIP)</button>
+            <button class="mini-btn" type="button" id="download-csv-btn" disabled>Save as CSV</button>
+          </div>
+        </article>
+      </section>
+ 
+      <!-- ✅ REPLACED: Old simple footer → Full contact footer matching template -->
+      <footer class="site-footer site-footer--full">
+        <div class="wrap footer-wrap footer-wrap--with-contact">
+          <div class="footer-contact" aria-label="Contact Nexcen Global">
+ 
+            <!-- Email Card -->
+            <a class="footer-contact-card" href="mailto:info@nexcenglobal.com">
+              <span class="footer-lead" aria-hidden="true">
+                <svg class="footer-flag-svg" viewBox="0 0 60 40" focusable="false">
+                  <defs>
+                    <linearGradient id="footerGlobeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#1f7bcf" />
+                      <stop offset="100%" stop-color="#11a592" />
+                    </linearGradient>
+                  </defs>
+                  <rect width="60" height="40" rx="4" fill="url(#footerGlobeGrad)" />
+                  <circle cx="30" cy="20" r="11" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" />
+                  <ellipse cx="30" cy="20" rx="4" ry="11" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1" />
+                  <path d="M12 20h36M30 9c-4 6-4 14 0 22" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1" />
+                </svg>
+              </span>
+              <span class="footer-contact-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                  <path d="m22 6-10 7L2 6" />
+                </svg>
+              </span>
+              <span class="footer-contact-body">
+                <span class="footer-contact-label">Email</span>
+                <span class="footer-contact-value">info@nexcenglobal.com</span>
+              </span>
+            </a>
+ 
+            <!-- India Phone Card -->
+            <a class="footer-contact-card" href="tel:+919717522463" aria-label="India phone: +91-97175 22463">
+              <span class="footer-lead" aria-hidden="true">
+                <img class="footer-flag-img" width="60" height="40" alt="" decoding="async" src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2060%2040%27%3E%3Crect%20width%3D%2760%27%20height%3D%2713.33%27%20fill%3D%27%23FF9933%27%2F%3E%3Crect%20y%3D%2713.33%27%20width%3D%2760%27%20height%3D%2713.34%27%20fill%3D%27%23FFFFFF%27%2F%3E%3Crect%20y%3D%2726.67%27%20width%3D%2760%27%20height%3D%2713.33%27%20fill%3D%27%23138808%27%2F%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2720%27%20r%3D%274.2%27%20fill%3D%27none%27%20stroke%3D%27%23000080%27%20stroke-width%3D%271.1%27%2F%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2720%27%20r%3D%271.1%27%20fill%3D%27%23000080%27%2F%3E%3C%2Fsvg%3E" />
+              </span>
+              <span class="footer-contact-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+              </span>
+              <span class="footer-contact-body footer-contact-body--phone">
+                <span class="footer-contact-value">+91-97175 22463</span>
+              </span>
+            </a>
+ 
+            <!-- USA Phone Card -->
+            <a class="footer-contact-card" href="tel:+16785974298" aria-label="United States phone: +1 (678) 597-4298">
+              <span class="footer-lead" aria-hidden="true">
+                <img class="footer-flag-img" width="60" height="40" alt="" decoding="async" src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2060%2040%27%3E%3Crect%20fill%3D%27%23B22234%27%20width%3D%2760%27%20height%3D%2740%27%2F%3E%3Cpath%20fill%3D%27%23FFFFFF%27%20d%3D%27M0%203h60v3H0zm0%206h60v3H0zm0%206h60v3H0zm0%206h60v3H0zm0%206h60v3H0zm0%206h60v3H0z%27%2F%3E%3Crect%20width%3D%2724%27%20height%3D%2721%27%20fill%3D%27%233C3B6E%27%2F%3E%3Ccircle%20cx%3D%274%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%278%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%276%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2710%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%274%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%278%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%276%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2710%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%274%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%278%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%276%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2710%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3C%2Fsvg%3E" />
+              </span>
+              <span class="footer-contact-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+              </span>
+              <span class="footer-contact-body footer-contact-body--phone">
+                <span class="footer-contact-value">+1 (678) 597-4298</span>
+              </span>
+            </a>
+          </div>
+ 
+          <!-- Copyright + Nav Links -->
+          <div class="footer-main">
+            <p class="footer-copy">© 2026 Scorely AI. All rights reserved.</p>
+            <div class="footer-links">
+              <a href="/">Home</a>
+              <a href="/assessment">Assessment Tool</a>
+              <a href="/viva">Viva Adaptive</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </main>
+ 
+    <script src="/static/js/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" class="student-doc">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Panel | Viva Adaptive</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/student-panel.css" />
+    <link rel="stylesheet" href="/static/css/student-viva.css" />
+    <link rel="stylesheet" href="/static/css/footer-contact.css" />
+    <link rel="stylesheet" href="/static/css/student_flask_bridge.css" />
+  </head>
+  <body class="student-page student-viva-page">
+    <div id="evaluating-overlay">
+      <div class="modern-spinner"></div>
+      <div class="overlay-text">We are Evaluating Your Results</div>
+      <div class="overlay-subtext">Our AI is analyzing your answers and generating recommendations…</div>
+    </div>
+
+    <div class="student-page-strip" aria-hidden="true"></div>
+    <div class="student-page-bg" aria-hidden="true">
+      <span class="student-page-orb student-page-orb--a"></span>
+      <span class="student-page-orb student-page-orb--b"></span>
+      <span class="student-page-orb student-page-orb--c"></span>
+    </div>
+
+    <header class="student-header">
+      <div class="student-header-inner student-header-inner--viva">
+        <div class="student-header-left">
+          <a class="student-header-home" href="/viva">Home</a>
+          <div class="student-header-brand">
+            <span class="student-header-cap" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12 3 1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9z"
+                />
+              </svg>
+            </span>
+            <span class="student-header-title">Student Panel</span>
+          </div>
+        </div>
+        <div id="studentInfo" class="student-header-actions" style="display: none">
+          <span class="student-header-user" id="displayRollNumber"></span>
+        </div>
+      </div>
+    </header>
+
+    <div class="student-container">
+      <main class="student-main">
+        <section id="login-section" class="section active">
+          <div class="student-card login-card">
+            <h1>Start Your Viva</h1>
+            <form id="studentLoginForm" class="student-viva-form" action="#" method="post" novalidate>
+              <div class="student-field">
+                <label for="session_code">Select Session <span class="req" aria-hidden="true">*</span></label>
+                <select id="session_code" required>
+                  <option value="">Select a viva session</option>
+                </select>
+              </div>
+              <div class="student-form-grid">
+                <div class="student-field">
+                  <label for="roll_number">Roll Number <span class="req" aria-hidden="true">*</span></label>
+                  <input type="text" id="roll_number" required placeholder="e.g., CS001" autocomplete="username" />
+                </div>
+                <div class="student-field">
+                  <label for="student_name">Full Name <span class="req" aria-hidden="true">*</span></label>
+                  <input type="text" id="student_name" required placeholder="e.g., John Doe" autocomplete="name" />
+                </div>
+              </div>
+              <button type="submit" class="student-submit">Start Viva Examination</button>
+            </form>
+            <div id="loginMessage" class="message"></div>
+            <div id="alreadyTaken" class="already-taken" style="display: none">
+              <h3>You have already completed this viva!</h3>
+              <button type="button" class="student-submit" style="margin-top: 8px" onclick="showExistingResult()">
+                View Previous Result
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section id="viva-section" class="section">
+          <div class="viva-container">
+            <div class="viva-header">
+              <div class="progress-info">
+                <span id="questionCounter">Question 1 of 10</span>
+                <div class="progress-bar">
+                  <div id="progressFill" class="progress-fill"></div>
+                </div>
+              </div>
+              <div id="vivaTimer" class="viva-timer">
+                <span class="timer-icon" aria-hidden="true">⏱</span>
+                <span id="timerDisplay">10:00</span>
+              </div>
+              <div class="difficulty-badge" style="display: none">
+                <span id="currentDifficulty"></span>
+              </div>
+            </div>
+
+            <div class="question-card">
+              <h3 id="questionText">Loading question…</h3>
+              <p id="questionHint" class="question-hint"></p>
+            </div>
+
+            <div class="answer-section">
+              <label for="answerText">Your Answer:</label>
+              <div class="answer-input-container">
+                <textarea id="answerText" placeholder="Type your answer here…" rows="6" autocomplete="off"></textarea>
+                <div class="voice-controls">
+                  <button type="button" id="startVoice" class="voice-btn" title="Start Voice Input">Click to Speak</button>
+                  <button type="button" id="stopVoice" class="voice-btn stop" style="display: none" title="Stop Recording">
+                    Stop
+                  </button>
+                </div>
+                <div id="voiceStatus" class="voice-status"></div>
+              </div>
+            </div>
+
+            <div class="viva-actions">
+              <button type="button" id="submitAnswer" class="btn btn-primary">Next Question</button>
+            </div>
+          </div>
+
+          <div
+            id="camera-widget"
+            class="camera-widget"
+            role="region"
+            aria-label="Live proctoring preview"
+          >
+            <div class="camera-header">
+              <span class="camera-dot" id="cameraDot"></span>
+              <span class="camera-label">Live Proctoring</span>
+              <button type="button" class="camera-toggle-btn" id="cameraToggleBtn" title="Toggle Camera">⛶</button>
+            </div>
+            <div class="camera-feed-wrapper">
+              <video id="cameraFeed" autoplay muted playsinline></video>
+              <div id="cameraStatus" class="camera-status-overlay">
+                <div class="camera-spinner"></div>
+                <span>Starting camera…</span>
+              </div>
+              <div id="faceAlert" class="face-alert" style="display: none">Face not detected</div>
+            </div>
+            <div class="camera-info-bar">
+              <span id="cameraStudentName" class="cam-student-name">—</span>
+              <span id="cameraFaceStatus" class="cam-face-status face-ok">● Present</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="feedback-section" class="section">
+          <div class="feedback-container">
+            <div class="feedback-header">
+              <h2>Answer Feedback</h2>
+              <div class="score-display">
+                <span id="feedbackScore">0</span>
+                <span class="score-label">/100</span>
+              </div>
+              <div id="qualityBadge" class="quality-badge">-</div>
+            </div>
+            <div class="feedback-details">
+              <div class="feedback-item">
+                <h4>Your Answer</h4>
+                <p id="feedbackStudentAnswer"></p>
+              </div>
+              <div class="feedback-item">
+                <h4>Ideal Answer</h4>
+                <p id="feedbackIdealAnswer"></p>
+              </div>
+              <div class="feedback-item">
+                <h4>Feedback</h4>
+                <p id="feedbackText"></p>
+              </div>
+              <div class="feedback-item">
+                <h4>Improvement</h4>
+                <p id="feedbackImprovement"></p>
+              </div>
+              <div class="feedback-item">
+                <h4>Explanation</h4>
+                <p id="feedbackExplanation"></p>
+              </div>
+            </div>
+            <div class="feedback-actions">
+              <button type="button" id="nextQuestionBtn" class="btn btn-primary">Next Question</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="result-section" class="section">
+          <div class="result-container">
+            <div class="result-header">
+              <h2>Viva Completed!</h2>
+              <div class="final-score">
+                <span id="finalScore">0</span>
+                <div id="finalPercentage" style="font-size: 1.2rem; color: #2563eb; font-weight: 600; margin-top: 6px;">0%</div>
+              </div>
+              <div id="finalVerdict" class="verdict-badge">-</div>
+              <div style="width: min(300px, 90vw); height: min(300px, 90vw); margin: 24px auto">
+                <canvas id="performanceChart"></canvas>
+              </div>
+            </div>
+            <div id="reportContent" class="report-content"></div>
+            <div class="result-actions">
+              <button type="button" onclick="location.reload()" class="btn btn-secondary">Take Another Viva</button>
+              <button type="button" onclick="printResult()" class="btn btn-primary">Print Report</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="site-footer site-footer--full site-footer--student-panel">
+      <div class="footer-wrap footer-wrap--with-contact">
+        <div class="footer-contact" aria-label="Contact Nexcen Global">
+          <a class="footer-contact-card" href="mailto:info@nexcenglobal.com">
+            <span class="footer-lead" aria-hidden="true">
+              <svg class="footer-flag-svg" viewBox="0 0 60 40" focusable="false">
+                <defs>
+                  <linearGradient id="footerGlobeGradStudent" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#1f7bcf" />
+                    <stop offset="100%" stop-color="#11a592" />
+                  </linearGradient>
+                </defs>
+                <rect width="60" height="40" rx="4" fill="url(#footerGlobeGradStudent)" />
+                <circle cx="30" cy="20" r="11" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" />
+                <ellipse cx="30" cy="20" rx="4" ry="11" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1" />
+                <path d="M12 20h36M30 9c-4 6-4 14 0 22" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1" />
+              </svg>
+            </span>
+            <span class="footer-contact-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <path d="m22 6-10 7L2 6" />
+              </svg>
+            </span>
+            <span class="footer-contact-body">
+              <span class="footer-contact-label">Email</span>
+              <span class="footer-contact-value">info@nexcenglobal.com</span>
+            </span>
+          </a>
+          <a class="footer-contact-card" href="tel:+919717522463" aria-label="India phone: +91-97175 22463">
+            <span class="footer-lead" aria-hidden="true">
+              <img class="footer-flag-img" width="60" height="40" alt="" decoding="async" src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2060%2040%27%3E%3Crect%20width%3D%2760%27%20height%3D%2713.33%27%20fill%3D%27%23FF9933%27%2F%3E%3Crect%20y%3D%2713.33%27%20width%3D%2760%27%20height%3D%2713.34%27%20fill%3D%27%23FFFFFF%27%2F%3E%3Crect%20y%3D%2726.67%27%20width%3D%2760%27%20height%3D%2713.33%27%20fill%3D%27%23138808%27%2F%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2720%27%20r%3D%274.2%27%20fill%3D%27none%27%20stroke%3D%27%23000080%27%20stroke-width%3D%271.1%27%2F%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2720%27%20r%3D%271.1%27%20fill%3D%27%23000080%27%2F%3E%3C%2Fsvg%3E" />
+            </span>
+            <span class="footer-contact-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+            </span>
+            <span class="footer-contact-body footer-contact-body--phone">
+              <span class="footer-contact-value">+91-97175 22463</span>
+            </span>
+          </a>
+          <a class="footer-contact-card" href="tel:+16785974298" aria-label="United States phone: +1 (678) 597-4298">
+            <span class="footer-lead" aria-hidden="true">
+              <img class="footer-flag-img" width="60" height="40" alt="" decoding="async" src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2060%2040%27%3E%3Crect%20fill%3D%27%23B22234%27%20width%3D%2760%27%20height%3D%2740%27%2F%3E%3Cpath%20fill%3D%27%23FFFFFF%27%20d%3D%27M0%203h60v3H0zm0%206h60v3H0zm0%206h60v3H0zm0%206h60v3H0zm0%206h60v3H0zm0%206h60v3H0z%27%2F%3E%3Crect%20width%3D%2724%27%20height%3D%2721%27%20fill%3D%27%233C3B6E%27%2F%3E%3Ccircle%20cx%3D%274%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%278%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%276%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2710%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%274%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%278%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%276%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2710%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%274%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%278%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%276%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2710%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3C%2Fsvg%3E" />
+            </span>
+            <span class="footer-contact-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+            </span>
+            <span class="footer-contact-body footer-contact-body--phone">
+              <span class="footer-contact-value">+1 (678) 597-4298</span>
+            </span>
+          </a>
+        </div>
+        <div class="footer-main">
+          <p class="footer-copy">© 2026 Scorely AI. All rights reserved.</p>
+          <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/assessment">Assessment Tool</a>
+            <a href="/viva">Viva Adaptive</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/static/js/student.js"></script>
+  </body>
+</html>

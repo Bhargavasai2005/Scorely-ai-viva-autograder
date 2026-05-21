@@ -1,0 +1,17 @@
+pywebview>=4.0.0
+openai>=1.0.0
+pymupdf>=1.23.0
+python-docx>=1.1.0
+python-dotenv
+SQLAlchemy
+psycopg2-binary
+pymysql
+cryptography
+boto3
+mysql-connector-python
+gevent
+gevent-websocket
+flask-socketio
+flask-cors
+faster-whisper
+pydub

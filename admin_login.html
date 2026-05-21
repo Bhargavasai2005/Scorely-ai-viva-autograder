@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Portal | Viva Adaptive</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/admin-login.css" />
+    <link rel="stylesheet" href="/static/css/footer-contact.css" />
+    <style>
+      #admin-login-error {
+        margin-top: 14px;
+        padding: 10px 12px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: #991b1b;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        text-align: center;
+      }
+      #admin-login-error[hidden] {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body class="viva-admin-login-page">
+    <div class="viva-admin-login-strip" aria-hidden="true"></div>
+    <div class="viva-admin-login-bg" aria-hidden="true">
+      <span class="viva-admin-login-orb viva-admin-login-orb--a"></span>
+      <span class="viva-admin-login-orb viva-admin-login-orb--b"></span>
+      <span class="viva-admin-login-orb viva-admin-login-orb--c"></span>
+    </div>
+    <a class="viva-admin-login-back" href="/viva">
+      <span class="viva-admin-login-back-icon" aria-hidden="true">←</span>
+      Viva Adaptive
+    </a>
+    <div class="viva-admin-login-main">
+      <main class="viva-admin-login">
+        <div class="viva-admin-login-card">
+          <header class="viva-admin-login-brand">
+            <div class="viva-admin-login-badge" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="24" cy="24" r="10" stroke="currentColor" stroke-width="2.5" />
+                <path
+                  d="M24 4v4M24 40v4M44 24h-4M8 24H4M38.6 9.4l-2.8 2.8M12.2 35.8l-2.8 2.8M38.6 38.6l-2.8-2.8M12.2 12.2l-2.8-2.8"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+            <p class="viva-admin-login-eyebrow">Viva Adaptive</p>
+            <h1>Admin Portal</h1>
+            <p class="viva-admin-login-sub">Sign in to sessions, questions, and analytics</p>
+          </header>
+          <form class="viva-admin-login-form" id="admin-login-form" action="#" method="post" novalidate>
+            <label class="viva-admin-login-field">
+              <span class="viva-admin-login-field-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </span>
+              <input
+                type="text"
+                name="username"
+                id="admin-username"
+                autocomplete="username"
+                placeholder="Username"
+                aria-label="Username"
+                required
+              />
+            </label>
+            <label class="viva-admin-login-field">
+              <span class="viva-admin-login-field-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </span>
+              <input
+                type="password"
+                name="password"
+                id="admin-password"
+                autocomplete="current-password"
+                placeholder="Password"
+                aria-label="Password"
+                required
+              />
+            </label>
+            <p id="admin-login-error" class="viva-admin-login-error" hidden role="alert"></p>
+            <button type="submit" class="viva-admin-login-submit">
+              <span>Sign in</span>
+              <span class="viva-admin-login-submit-glow" aria-hidden="true"></span>
+            </button>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <footer class="site-footer site-footer--full site-footer--admin-login">
+      <div class="footer-wrap footer-wrap--with-contact">
+        <div class="footer-contact" aria-label="Contact Nexcen Global">
+          <a class="footer-contact-card" href="mailto:info@nexcenglobal.com">
+            <span class="footer-lead" aria-hidden="true">
+              <svg class="footer-flag-svg" viewBox="0 0 60 40" focusable="false">
+                <defs>
+                  <linearGradient id="footerGlobeGradLogin" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#1f7bcf" />
+                    <stop offset="100%" stop-color="#11a592" />
+                  </linearGradient>
+                </defs>
+                <rect width="60" height="40" rx="4" fill="url(#footerGlobeGradLogin)" />
+                <circle cx="30" cy="20" r="11" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" />
+                <ellipse cx="30" cy="20" rx="4" ry="11" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1" />
+                <path d="M12 20h36M30 9c-4 6-4 14 0 22" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1" />
+              </svg>
+            </span>
+            <span class="footer-contact-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <path d="m22 6-10 7L2 6" />
+              </svg>
+            </span>
+            <span class="footer-contact-body">
+              <span class="footer-contact-label">Email</span>
+              <span class="footer-contact-value">info@nexcenglobal.com</span>
+            </span>
+          </a>
+          <a class="footer-contact-card" href="tel:+919717522463" aria-label="India phone: +91-97175 22463">
+            <span class="footer-lead" aria-hidden="true">
+              <img class="footer-flag-img" width="60" height="40" alt="" decoding="async" src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2060%2040%27%3E%3Crect%20width%3D%2760%27%20height%3D%2713.33%27%20fill%3D%27%23FF9933%27%2F%3E%3Crect%20y%3D%2713.33%27%20width%3D%2760%27%20height%3D%2713.34%27%20fill%3D%27%23FFFFFF%27%2F%3E%3Crect%20y%3D%2726.67%27%20width%3D%2760%27%20height%3D%2713.33%27%20fill%3D%27%23138808%27%2F%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2720%27%20r%3D%274.2%27%20fill%3D%27none%27%20stroke%3D%27%23000080%27%20stroke-width%3D%271.1%27%2F%3E%3Ccircle%20cx%3D%2730%27%20cy%3D%2720%27%20r%3D%271.1%27%20fill%3D%27%23000080%27%2F%3E%3C%2Fsvg%3E" />
+            </span>
+            <span class="footer-contact-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+            </span>
+            <span class="footer-contact-body footer-contact-body--phone">
+              <span class="footer-contact-value">+91-97175 22463</span>
+            </span>
+          </a>
+          <a class="footer-contact-card" href="tel:+16785974298" aria-label="United States phone: +1 (678) 597-4298">
+            <span class="footer-lead" aria-hidden="true">
+              <img class="footer-flag-img" width="60" height="40" alt="" decoding="async" src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2060%2040%27%3E%3Crect%20fill%3D%27%23B22234%27%20width%3D%2760%27%20height%3D%2740%27%2F%3E%3Cpath%20fill%3D%27%23FFFFFF%27%20d%3D%27M0%203h60v3H0zm0%206h60v3H0zm0%206h60v3H0zm0%206h60v3H0zm0%206h60v3H0zm0%206h60v3H0z%27%2F%3E%3Crect%20width%3D%2724%27%20height%3D%2721%27%20fill%3D%27%233C3B6E%27%2F%3E%3Ccircle%20cx%3D%274%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%278%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%273.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%276%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2710%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%276.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%274%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%278%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%279.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%276%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2710%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%2712.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%274%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%278%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2716%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2720%27%20cy%3D%2715.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%276%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2710%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2714%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3Ccircle%20cx%3D%2718%27%20cy%3D%2718.5%27%20r%3D%271%27%20fill%3D%27%23fff%27%2F%3E%3C%2Fsvg%3E" />
+            </span>
+            <span class="footer-contact-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+            </span>
+            <span class="footer-contact-body footer-contact-body--phone">
+              <span class="footer-contact-value">+1 (678) 597-4298</span>
+            </span>
+          </a>
+        </div>
+        <div class="footer-main">
+          <p class="footer-copy">© 2026 Scorely AI. All rights reserved.</p>
+          <div class="footer-links">
+            <a href="/">Home</a>
+            <a href="/assessment">Assessment Tool</a>
+            <a href="/viva">Viva Adaptive</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/static/js/admin_login.js"></script>
+  </body>
+</html>

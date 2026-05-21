@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Examination AI</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="header">
+            <h1>Examination AI</h1>
+            <p class="subtitle">
+                Upload a question paper (PDF/DOCX), three expert solutions (PDF/DOCX), and 1-25 student answer sheets (PDF/images/DOCX). Student names are derived from the answer sheet filenames.
+            </p>
+        </header>
+
+        <main class="main">
+            <section class="panel">
+                <h2>Batch Grading (Full Paper)</h2>
+                <form id="batch-form">
+
+                    <div class="form-group">
+                        <label for="question-paper">Question paper (PDF/DOCX):</label>
+                        <input type="file" id="question-paper" accept=".pdf,.docx" />
+                        <p class="hint">Upload 1 question paper (single file).</p>
+                        <div id="question-paper-selected" class="selected-files hidden"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Expert answers (3 docs, PDF/DOCX):</label>
+                        <div class="file-row">
+                            <label class="file-label">
+                                Expert 1
+                                <input type="file" id="expert1-doc" accept=".pdf,.docx" />
+                            </label>
+                            <label class="file-label">
+                                Expert 2
+                                <input type="file" id="expert2-doc" accept=".pdf,.docx" />
+                            </label>
+                            <label class="file-label">
+                                Expert 3
+                                <input type="file" id="expert3-doc" accept=".pdf,.docx" />
+                            </label>
+                        </div>
+                        <div id="expert1-selected" class="selected-files hidden"></div>
+                        <div id="expert2-selected" class="selected-files hidden"></div>
+                        <div id="expert3-selected" class="selected-files hidden"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="answer-sheet">Student answer sheets (1-25 PDFs/DOCX or images):</label>
+                        <input type="file" id="answer-sheet" accept=".pdf,.docx,.png,.jpg,.jpeg,.webp" multiple />
+                        <p class="hint">Upload 1-25 student answer sheets. Each file represents one student. Page numbers are based on upload order.</p>
+                        <div id="answer-sheet-selected" class="selected-files hidden"></div>
+                    </div>
+
+                    <div class="actions">
+                        <button type="submit" id="batch-grade-btn">Grade All Answer Sheets</button>
+                        <span id="batch-status" class="status"></span>
+                    </div>
+                </form>
+            </section>
+
+            <section class="panel">
+                <h2>Result</h2>
+                <div id="result" class="result">
+                    <p class="placeholder">No grading yet. Fill in the form and click <strong>Grade All Answer Sheets</strong>.</p>
+                </div>
+                <div class="result-actions">
+                    <button type="button" id="download-pdf-btn" disabled>Download All Reports (ZIP)</button>
+                    <button type="button" id="download-csv-btn" disabled>Save as CSV</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
